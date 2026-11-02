@@ -36,6 +36,9 @@ does not. See `images/terminal.png`.
 - The "literal bytes" side is computed with tssrp6a's own hash routine, not by running
   swift-srp. The claim that swift-srp hashes the salt as a literal byte array comes from
   reading its behavior while integrating the two. Please correct us if that is wrong.
+- It uses tssrp6a's default parameters (2048-bit group, SHA-512). The leading-zero effect
+  does not depend on the hash: we also reproduced it with `SRPParameters.H.SHA256`, which
+  is the configuration our client uses. Use the same group and hash on both sides.
 
 ## The fix we use
 
