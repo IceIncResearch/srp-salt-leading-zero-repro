@@ -15,7 +15,10 @@ different `x` values, so the proofs do not match and login fails with no useful 
 A random salt starts with `0x00` about 1 time in 256, so it shows up as an
 intermittent failure that is hard to reproduce.
 
-This is a compatibility trap, not a vulnerability.
+This is an availability problem, not a vulnerability. As we read RFC 5054, `x` is computed from the salt as
+sent, so the minimal-length conversion in tssrp6a looks like the deviation (reported:
+https://github.com/midonet/tssrp6a/issues/95). If you control the server, keeping the salt as bytes there is the
+better fix.
 
 ## Run it
 
@@ -40,7 +43,7 @@ does not. See `images/terminal.png`.
   does not depend on the hash: we also reproduced it with `SRPParameters.H.SHA256`, which
   is the configuration our client uses. Use the same group and hash on both sides.
 
-## The fix we use
+## The workaround we use
 
 Normalize the salt on the client through the same bigint round trip tssrp6a uses
 before hashing, so both sides hash the same bytes. We also compute the client and
